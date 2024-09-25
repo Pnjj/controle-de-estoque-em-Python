@@ -1,0 +1,68 @@
+# Sistema de Controle de Estoque
+
+estoque = {}
+
+def registrar_material():
+    nome = input("Nome do material: ").strip()
+    quantidade = int(input(f"Quantidade de {nome}: "))
+    if nome in estoque:
+        print(f"{nome} já está registrado. Atualizando quantidade...")
+        estoque[nome] += quantidade
+    else:
+        estoque[nome] = quantidade
+    print(f"{nome} registrado com sucesso!")
+
+def atualizar_quantidade():
+    nome = input("Nome do material a ser atualizado: ").strip()
+    if nome in estoque:
+        quantidade = int(input(f"Quantidade a adicionar/remover (use valores negativos para remover): "))
+        estoque[nome] += quantidade
+        if estoque[nome] < 0:
+            estoque[nome] = 0
+        print(f"Quantidade de {nome} atualizada para {estoque[nome]}")
+    else:
+        print(f"{nome} não encontrado no estoque!")
+
+def visualizar_estoque():
+    if not estoque:
+        print("Estoque vazio!")
+    else:
+        print("\nEstoque atual:")
+        for nome, quantidade in estoque.items():
+            print(f"- {nome}: {quantidade} unidades")
+
+def remover_material():
+    nome = input("Nome do material a ser removido: ").strip()
+    if nome in estoque:
+        del estoque[nome]
+        print(f"{nome} removido do estoque.")
+    else:
+        print(f"{nome} não encontrado no estoque!")
+
+def menu():
+    while True:
+        print("\n--- Sistema de Controle de Estoque ---")
+        print("1. Registrar novo material")
+        print("2. Atualizar quantidade de material")
+        print("3. Visualizar estoque")
+        print("4. Remover material")
+        print("5. Sair")
+        
+        opcao = input("Escolha uma opção: ")
+        
+        if opcao == '1':
+            registrar_material()
+        elif opcao == '2':
+            atualizar_quantidade()
+        elif opcao == '3':
+            visualizar_estoque()
+        elif opcao == '4':
+            remover_material()
+        elif opcao == '5':
+            print("Encerrando o sistema...")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+# Executando o sistema
+menu()

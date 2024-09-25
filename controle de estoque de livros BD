@@ -1,0 +1,58 @@
+-- Passo 1: Criar a tabela de Livros
+CREATE TABLE Livros (
+    id INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único para cada livro
+    titulo VARCHAR(255) NOT NULL,       -- Título do livro
+    autor VARCHAR(255),                 -- Autor do livro
+    quantidade_total INT NOT NULL,      -- Quantidade total de exemplares do livro
+    quantidade_disponivel INT NOT NULL  -- Quantidade de exemplares disponíveis para empréstimo
+);
+
+-- Passo 2: Criar a tabela de Empréstimos
+CREATE TABLE Emprestimos (
+    id INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único para cada empréstimo
+    livro_id INT,                       -- Referência para o ID do livro
+    data_emprestimo DATE,               -- Data em que o livro foi emprestado
+    data_devolucao DATE,                -- Data em que o livro foi devolvido (pode ser NULL enquanto não devolvido)
+    FOREIGN KEY (livro_id) REFERENCES Livros(id)  -- Relação entre Empréstimos e Livros
+);
+
+-- Passo 3: Inserir dados de exemplo na tabela Livros
+INSERT INTO Livros (titulo, autor, quantidade_total, quantidade_disponivel)
+VALUES 
+('1984', 'George Orwell', 10, 10),       -- Livro 1
+('O Senhor dos Anéis', 'J.R.R. Tolkien', 5, 5),  -- Livro 2
+('Dom Quixote', 'Miguel de Cervantes', 7, 7);    -- Livro 3
+
+-- Passo 4: Registrar um empréstimo de um livro (Exemplo: Livro '1984')
+-- Registrar o empréstimo
+INSERT INTO Emprestimos (livro_id, data_emprestimo, data_devolucao)
+VALUES (1, '2024-09-24', NULL);  -- O livro 1 (1984) foi emprestado hoje
+
+-- Atualizar a quantidade disponível do livro '1984'
+UPDATE Livros
+SET quantidade_disponivel = quantidade_disponivel - 1
+WHERE id = 1;
+
+-- Passo 5: Registrar a devolução de um livro (Exemplo: Livro '1984')
+-- Atualizar a data de devolução para o empréstimo do livro '1984'
+UPDATE Emprestimos
+SET data_devolucao = '2024-10-01'
+WHERE id = 1;
+
+-- Aumentar a quantidade disponível do livro '1984'
+UPDATE Livros
+SET quantidade_disponivel = quantidade_disponivel + 1
+WHERE id = 1;
+
+-- Consultas úteis:
+-- 1. Consultar todos os livros e suas quantidades disponíveis
+SELECT * FROM Livros;
+
+-- 2. Consultar os empréstimos em andamento (livros ainda não devolvidos)
+SELECT * FROM Emprestimos
+WHERE data_devolucao IS NULL;
+
+-- 3. Consultar quantos exemplares de '1984' estão emprestados
+SELECT quantidade_total - quantidade_disponivel AS emprestados
+FROM Livros
+WHERE titulo = '1984';
